@@ -1,0 +1,8 @@
+.git
+.gitignore
+*.md
+*.py
+deployments/
+config.json
+secrets/*
+.env

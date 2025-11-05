@@ -1,0 +1,16 @@
+{
+  "netbox_url": "https://ipam.dcn.nhn.no",
+  "nam_url": "https://dcn.nhn.no:3000",
+  "checks": [
+    {
+      "netbox_site_id": 715,
+      "infra": "prod",
+      "vdc_name": "nhn-trd2-vdc04"
+    },
+    {
+      "netbox_site_id": 782,
+      "infra": "prod",
+      "vdc_name": "nhn-bgo1-vdc15"
+    }
+  ]
+}
