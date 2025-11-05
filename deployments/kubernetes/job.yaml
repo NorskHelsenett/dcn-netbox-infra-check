@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dcn-netbox-infra-check-manual
+  namespace: dcn-checks
+spec:
+  template:
+    metadata:
+      labels:
+        app: dcn-netbox-infra-check
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: dcn-netbox-infra-check
+          image: ncr.sky.nhn.no/dcn/dcn-netbox-infra-check:latest
+          imagePullPolicy: Always
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: config
+              mountPath: /app/config
+              readOnly: true
+            - name: secrets
+              mountPath: /app/secrets
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+      volumes:
+        - name: config
+          configMap:
+            name: dcn-netbox-infra-check-config
+        - name: secrets
+          secret:
+            secretName: dcn-secrets
+            items:
+              - key: netbox-token
+                path: netbox.secret
+              - key: nam-token
+                path: nam.secret
