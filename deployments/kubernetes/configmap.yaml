@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: dcn-netbox-infra-check-config
-  namespace: default
+  namespace: dcn-checks
 data:
   config.json: |
     {
