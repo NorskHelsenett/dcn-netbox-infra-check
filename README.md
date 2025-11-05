@@ -1,4 +1,4 @@
-# VDC VLAN Check
+# DCN Netbox Infra Check
 
 A Go application that compares VLANs between NAM and Netbox to identify
 misconfigurations and discrepancies.
