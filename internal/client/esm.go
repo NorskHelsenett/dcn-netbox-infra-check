@@ -51,7 +51,7 @@ type ESMProperties struct {
 
 func NewESMClient(baseURL, username, password string) *ESMClient {
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 	}
 	httpClient := &http.Client{
 		Transport: tr,
