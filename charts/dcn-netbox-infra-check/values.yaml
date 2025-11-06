@@ -27,6 +27,6 @@ data:
           "NETBOX_SITE_ID": 714,
           "INFRA": "prod",
           "VDC_NAME": "nhn-trd1-vdc01"
-        },
+        }
       ]
     }
