@@ -11,6 +11,9 @@ data:
     {
       "netbox_url": "https://ipam.dcn.nhn.no",
       "nam_url": "https://dcn.nhn.no:3000",
+      "esm_url": "https://esm.nhn.no",
+      "esm_user": "sa-m2t-api-dcn-rw",
+      "esm_tenant_id": "nhn",
       "slack_webhook_url": "",
       "checks": [
         {
