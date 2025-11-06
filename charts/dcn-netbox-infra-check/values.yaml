@@ -1,6 +1,6 @@
 infrastructure: "prod"
 image:
-  repository: "ncr.sky.nhn.no/dcn/dcn-netbox-infra-check"
+  repository: "ncr.sky.nhn.no/ghcr/norskhelsenett/dcn-netbox-infra-check"
   tag: "latest"
   pullPolicy: "Always"
 

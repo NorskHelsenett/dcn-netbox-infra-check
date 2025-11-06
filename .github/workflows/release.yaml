@@ -105,7 +105,7 @@ jobs:
         run: |
           export HELM_VERSION=${VERSION#v*}
           ./yq e -i '.version = strenv(HELM_VERSION),.appVersion = strenv(VERSION)' charts/dcn-netbox-infra-check/Chart.yaml
-          ./yq e -i '.image.tag = strenv(HELM_VERSION),.image.repository = "ncr.sky.nhn.no/norskhelsenett/dcn-netbox-infra-check"' charts/dcn-netbox-infra-check/values.yaml
+          ./yq e -i '.image.tag = strenv(HELM_VERSION),.image.repository = "ncr.sky.nhn.no/ghcr/norskhelsenett/dcn-netbox-infra-check"' charts/dcn-netbox-infra-check/values.yaml
           helm package charts/dcn-netbox-infra-check
           echo  ${{ secrets.GITHUB_TOKEN }} | helm registry login -u ${{ github.actor }} ghcr.io --password-stdin
           helm push dcn-netbox-infra-check-${HELM_VERSION}.tgz oci://ghcr.io/norskhelsenett/helm/
