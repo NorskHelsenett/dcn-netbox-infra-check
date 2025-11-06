@@ -11,7 +11,7 @@ data:
     {
       "netbox_url": "https://ipam.dcn.nhn.no",
       "nam_url": "https://dcn.nhn.no:3000",
-      "slack_webhook_url": ""
+      "slack_webhook_url": "",
       "checks": [
         {
           "netbox_site_id": 715,
