@@ -21,7 +21,7 @@ type NAMClient struct {
 // NewNAMClient creates a new NAM API client
 func NewNAMClient(baseURL, apiToken string) *NAMClient {
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 	}
 	httpClient := &http.Client{
 		Transport: tr,

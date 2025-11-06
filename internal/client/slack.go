@@ -21,7 +21,7 @@ type SlackClient struct {
 // NewSlackClient creates a new Slack client
 func NewSlackClient(webhookURL string) *SlackClient {
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 	}
 	httpClient := &http.Client{
 		Transport: tr,

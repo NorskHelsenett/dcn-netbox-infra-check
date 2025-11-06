@@ -10,9 +10,56 @@ spec:
         app: dcn-netbox-infra-check
     spec:
       restartPolicy: Never
+
+      volumes:
+        - name: config
+          configMap:
+            name: dcn-netbox-infra-check-config
+        - name: nhn-certbundle
+          configMap:
+            name: nhn-certbundle
+        - name: certs
+          emptyDir: {}
+        - name: secrets
+          secret:
+            secretName: dcn-secrets
+            items:
+              - key: netbox-token
+                path: netbox.secret
+              - key: nam-token
+                path: nam.secret
+              - key: esm-password
+                path: esm.secret
+
+      initContainers:
+        - name: update-ca
+          image: alpine:3.20
+          command: ["/bin/sh", "-c"]
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: false
+            runAsUser: 0
+            readOnlyRootFilesystem: false
+          args:
+            - |
+                set -e
+                apk add --no-cache ca-certificates
+                cp /mnt/ca/* /usr/local/share/ca-certificates/
+                update-ca-certificates
+                cp -r /etc/ssl/certs/* /mnt/certs/
+          volumeMounts:
+            - name: nhn-certbundle
+              mountPath: /mnt/ca
+            - name: certs
+              mountPath: /mnt/certs
+
       containers:
         - name: dcn-netbox-infra-check
-          image: ncr.sky.nhn.no/dcn/dcn-netbox-infra-check:latest
+          image: ncr.sky.nhn.no/dcn/dcn-netbox-infra-check:v0.0.1
           imagePullPolicy: Always
           securityContext:
             seccompProfile:
@@ -31,6 +78,10 @@ spec:
             - name: secrets
               mountPath: /app/secrets
               readOnly: true
+            - name: certs
+              mountPath: /etc/ssl/certs
+              readOnly: true
+
           resources:
             requests:
               memory: "128Mi"
@@ -38,15 +89,3 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "200m"
-      volumes:
-        - name: config
-          configMap:
-            name: dcn-netbox-infra-check-config
-        - name: secrets
-          secret:
-            secretName: dcn-secrets
-            items:
-              - key: netbox-token
-                path: netbox.secret
-              - key: nam-token
-                path: nam.secret

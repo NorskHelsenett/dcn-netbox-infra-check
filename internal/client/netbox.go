@@ -21,7 +21,7 @@ type NetboxClient struct {
 // NewNetboxClient creates a new Netbox API client
 func NewNetboxClient(baseURL, apiToken string) *NetboxClient {
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 	}
 	httpClient := &http.Client{
 		Transport: tr,
