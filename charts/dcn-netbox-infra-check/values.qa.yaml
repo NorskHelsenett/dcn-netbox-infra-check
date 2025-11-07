@@ -1,6 +1,6 @@
-infrastructure: "prod"
+infrastructure: "qa"
 namespace: "dcn-checks"
-nameOverride: ""
+
 image:
   repository: "ncr.sky.nhn.no/ghcr/norskhelsenett/dcn-netbox-infra-check"
   tag: "latest"
@@ -14,11 +14,13 @@ schedule: "0 8 * * *"
 data:
   config.json: |
     {
-      "netbox_url": "https://ipam.dcn.nhn.no",
-      "nam_url": "https://dcn.nhn.no:3000",
-      "esm_url": "https://esm.nhn.no",
+      "netbox_url": "https://ipam.qa.dcn.nhn.no",
+      "nam_url": "https://qa.dcn.nhn.no:3000",
+      "esm_url": "https://test.esm.nhn.no",
       "esm_user": "sa-m2t-api-dcn-rw",
-      "esm_tenant_id": "nhn",
+      "esm_tenant_id": 938019087,
+      "esm_offiring": "68905",
+      "esm_requester_id": "200198",
       "slack_webhook_url": "",
       "checks": [
         {
