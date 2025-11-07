@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: dcn-netbox-infra-check-manual-{{ .Values.infrastructure }}
-  namespace: dcn-checks
+  namespace: {{ .Values.namespace }}
 spec:
   template:
     metadata:

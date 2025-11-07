@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: dcn-netbox-infra-check-config-{{ .Values.infrastructure }}
-  namespace: dcn-checks
+  namespace: {{ .Values.namespace }}
 data:
 {{- range $key, $val := .Values.data }}
   {{ $key }}: |

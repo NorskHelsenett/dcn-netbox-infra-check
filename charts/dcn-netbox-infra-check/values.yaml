@@ -1,8 +1,13 @@
 infrastructure: "prod"
+namespace: "dcn-checks"
+
 image:
   repository: "ncr.sky.nhn.no/ghcr/norskhelsenett/dcn-netbox-infra-check"
   tag: "latest"
   pullPolicy: "Always"
+
+successfulJobsHistoryLimit: 3
+failedJobsHistoryLimit: 3
 
 schedule: "0 8 * * *"
 
