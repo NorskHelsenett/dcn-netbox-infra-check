@@ -9,7 +9,7 @@ image:
 successfulJobsHistoryLimit: 3
 failedJobsHistoryLimit: 3
 
-schedule: "*/3 * * * *"
+schedule: "0 6 * * *"
 
 data:
   config.json: |
