@@ -62,6 +62,7 @@ func main() {
 			netboxVLANs,
 			netboxPrefixes,
 			namVxLANs,
+			cfg,
 		)
 
 		// Print results to console

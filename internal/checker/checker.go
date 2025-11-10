@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/NorskHelsenett/dcn-netbox-infra-check/internal/config"
 	"github.com/NorskHelsenett/dcn-netbox-infra-check/internal/models"
 )
 
@@ -39,6 +40,7 @@ func Check(
 	netboxVLANs []models.NetboxVLAN,
 	netboxPrefixes []models.NetboxPrefix,
 	namVxLANs []models.NAMVxLAN,
+	config *config.Config,
 ) *Result {
 	result := &Result{
 		VDCName: vdcName,
@@ -64,7 +66,7 @@ func Check(
 		len(result.WrongPrefixes) > 0
 
 	// Generate output
-	result.Output = generateOutput(result)
+	result.Output = generateOutput(result, config)
 
 	return result
 }
@@ -182,7 +184,7 @@ func normalizeName(name string) string {
 }
 
 // generateOutput creates formatted output text
-func generateOutput(result *Result) string {
+func generateOutput(result *Result, config *config.Config) string {
 	var buf bytes.Buffer
 
 	if len(result.MovedVLANs) > 0 {
@@ -201,7 +203,7 @@ func generateOutput(result *Result) string {
 	if len(result.MisconfiguredVLANs) > 0 {
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
-		buf.WriteString(fmt.Sprintf("Vxlans i '%s' som mangler eller ikke er registrert som '%s' i Netbox\n", result.VDCName, result.Infra))
+		buf.WriteString(fmt.Sprintf("Vxlans i '%s' som mangler eller ikke er registrert som '%s' i Netbox (%s)\n", result.VDCName, result.Infra, config.NetboxURL))
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
 		for _, vxlan := range result.MisconfiguredVLANs {
@@ -213,7 +215,7 @@ func generateOutput(result *Result) string {
 	if len(result.NameMismatches) > 0 {
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
-		buf.WriteString(fmt.Sprintf("Vxlans i '%s' som ikke har samme navn i Netbox\n", result.VDCName))
+		buf.WriteString(fmt.Sprintf("Vxlans i '%s' som ikke har samme navn i Netbox (%s)\n", result.VDCName, config.NetboxURL))
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
 		for _, vxlan := range result.NameMismatches {
@@ -225,7 +227,7 @@ func generateOutput(result *Result) string {
 	if len(result.WrongPrefixes) > 0 {
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
-		buf.WriteString(fmt.Sprintf("Prefixes i '%s' som har feil 'infra'\n", result.VDCName))
+		buf.WriteString(fmt.Sprintf("Prefixes i '%s' som har feil 'infra i Netbox (%s)'\n", result.VDCName, config.NetboxURL))
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
 		for _, wp := range result.WrongPrefixes {
