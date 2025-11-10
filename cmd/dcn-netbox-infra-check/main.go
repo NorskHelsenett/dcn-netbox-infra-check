@@ -43,19 +43,16 @@ func main() {
 		// Fetch Netbox data for this site
 		netboxVLANs, err := netboxClient.FetchVLANs(check.NetboxSiteID)
 		if err != nil {
-			log.Printf("✗ Failed to fetch Netbox VLANs for site %d: %v", check.NetboxSiteID, err)
-			continue
+			log.Fatalf("✗ Failed to fetch Netbox VLANs for site %d: %v", check.NetboxSiteID, err)
 		}
 
 		netboxPrefixes, err := netboxClient.FetchPrefixes(check.NetboxSiteID)
 		if err != nil {
-			log.Printf("✗ Failed to fetch Netbox Prefixes for site %d: %v", check.NetboxSiteID, err)
-			continue
+			log.Fatalf("✗ Failed to fetch Netbox Prefixes for site %d: %v", check.NetboxSiteID, err)
 		}
 
 		if len(netboxVLANs) == 0 {
-			log.Printf("✗ No Netbox VLANs fetched for site %d - check API URL or token", check.NetboxSiteID)
-			continue
+			log.Fatalf("✗ No Netbox VLANs fetched for site %d - check API URL or token", check.NetboxSiteID)
 		}
 
 		// Perform checks
@@ -78,17 +75,16 @@ func main() {
 			// 	}
 			// }
 
-			esmClient := client.NewESMClient(cfg.ESMURL, cfg.ESMUser, cfg.ESMPassword)
+			esmClient := client.NewESMClient(cfg.ESMURL, cfg.ESMUser, cfg.ESMPassword, cfg.ESMTenantID)
 
 			err = esmClient.Authenticate()
 			if err != nil {
-				log.Printf("✗ Failed to authenticate to ESM: %v", err)
-				continue
+				log.Fatalf("✗ Failed to authenticate to ESM: %v", err)
 			}
-			request := esmClient.CreateRequest(result, check.VDCName, check.Infra)
+			request := esmClient.CreateRequest(result, check.VDCName, check.Infra, cfg)
 			err = esmClient.SendRequest(request)
 			if err != nil {
-				log.Printf("✗ Failed to send ESM request: %v", err)
+				log.Fatalf("✗ Failed to send ESM request: %v", err)
 			}
 
 		}

@@ -13,12 +13,14 @@ import (
 	"time"
 
 	"github.com/NorskHelsenett/dcn-netbox-infra-check/internal/checker"
+	"github.com/NorskHelsenett/dcn-netbox-infra-check/internal/config"
 )
 
 // NAMClient handles API calls to NAM
 type ESMClient struct {
 	httpClient  *http.Client
 	baseURL     string
+	tenantID    int
 	credentials ESMCredentials
 	apiToken    string
 }
@@ -49,7 +51,7 @@ type ESMProperties struct {
 	PublicScope        string
 }
 
-func NewESMClient(baseURL, username, password string) *ESMClient {
+func NewESMClient(baseURL, username, password string, tenantID int) *ESMClient {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 	}
@@ -61,6 +63,7 @@ func NewESMClient(baseURL, username, password string) *ESMClient {
 	return &ESMClient{
 		httpClient: httpClient,
 		baseURL:    baseURL,
+		tenantID:   tenantID,
 		credentials: ESMCredentials{
 			Username: username,
 			Password: password,
@@ -97,26 +100,22 @@ func (c *ESMClient) Authenticate() error {
 		return errors.New("smax login did not return OK")
 	}
 	c.apiToken = string(token)
-
 	return nil
 }
 
-func (c *ESMClient) CreateRequest(result *checker.Result, vdcName, infra string) ESMRequest {
-
-	preview := result.Output
-	// lines := strings.Split(preview, "\n")
+func (c *ESMClient) CreateRequest(result *checker.Result, vdcName, infra string, config *config.Config) ESMRequest {
 
 	// Format preview with HTML line breaks for ESM
-	formattedPreview := strings.ReplaceAll(preview, "\n", "<br>")
+	formattedOutput := strings.ReplaceAll(result.Output, "\n", "<br>")
 
 	properties := ESMProperties{
-		RequestsOffering:   "68905",
+		RequestsOffering:   config.ESMOfferingID,
 		CreationSource:     "CreationSourceEss",
-		RequestedByPerson:  "200198",
-		RequestedForPerson: "200198",
-		UserOptions:        "{\"complexTypeProperties\":[{\"properties\":{\"DynamicComplexTypeRefName_c\":\"UserOption26bced6d955710349f8591eb08fe118dde2e_c\",\"changedUserOptionsForSimulation\":\"Person_c&\",\"history_Offering_User_Options_Price\":\"null\",\"Tjeneste_c\":\"73470\",\"Team_c\":\"67910\"}}]}",
+		RequestedByPerson:  config.ESMRequesterID,
+		RequestedForPerson: config.ESMRequesterID,
+		UserOptions:        fmt.Sprintf("{\"complexTypeProperties\":[{\"properties\":{\"Tjeneste_c\":\"%s\",\"Team_c\":\"%s\"}}]}", config.ESMServiceID, config.ESMTeamID),
 		DisplayLabel:       fmt.Sprintf("VDC Infra Check - %s - %s", vdcName, infra),
-		Description:        formattedPreview,
+		Description:        formattedOutput,
 		PublicScope:        "Private",
 	}
 
@@ -143,7 +142,7 @@ func (c *ESMClient) SendRequest(request ESMRequest) error {
 		return err
 	}
 
-	httpRequest, err := http.NewRequest("POST", fmt.Sprintf("%s/rest/%d/ems/bulk", c.baseURL, 938019087), bytes.NewBuffer(body))
+	httpRequest, err := http.NewRequest("POST", fmt.Sprintf("%s/rest/%d/ems/bulk", c.baseURL, c.tenantID), bytes.NewBuffer(body))
 	if err != nil {
 		return err
 	}

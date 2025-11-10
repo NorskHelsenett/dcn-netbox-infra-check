@@ -9,7 +9,7 @@ image:
 successfulJobsHistoryLimit: 3
 failedJobsHistoryLimit: 3
 
-schedule: "0 8 * * *"
+schedule: "*/5 * * * *"
 
 data:
   config.json: |
@@ -18,7 +18,11 @@ data:
       "nam_url": "https://dcn.nhn.no:3000",
       "esm_url": "https://esm.nhn.no",
       "esm_user": "sa-m2t-api-dcn-rw",
-      "esm_tenant_id": "nhn",
+      "esm_tenant_id": 938019087,
+      "esm_offering_id": "68905",
+      "esm_requester_id": "200198",
+      "esm_service_id": "73470",
+      "esm_team_id": "67910",
       "slack_webhook_url": "",
       "checks": [
         {
@@ -32,9 +36,9 @@ data:
           "vdc_name": "nhn-bgo1-vdc15"
         },
         {
-          "NETBOX_SITE_ID": 714,
-          "INFRA": "prod",
-          "VDC_NAME": "nhn-trd1-vdc01"
+          "netbox_site_id": 714,
+          "infra": "prod",
+          "vdc_name": "nhn-trd1-vdc01"
         }
       ]
     }

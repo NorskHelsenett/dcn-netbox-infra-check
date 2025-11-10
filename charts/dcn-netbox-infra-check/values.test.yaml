@@ -1,0 +1,34 @@
+infrastructure: "test"
+namespace: "dcn-checks"
+
+image:
+  repository: "ncr.sky.nhn.no/ghcr/norskhelsenett/dcn-netbox-infra-check"
+  tag: "latest"
+  pullPolicy: "Always"
+
+successfulJobsHistoryLimit: 3
+failedJobsHistoryLimit: 3
+
+schedule: "*/5 * * * *"
+
+data:
+  config.json: |
+    {
+      "netbox_url": "https://ipam.qa.dcn.nhn.no",
+      "nam_url": "https://qa.dcn.nhn.no:3000",
+      "esm_url": "https://test.esm.nhn.no",
+      "esm_user": "sa-m2p-api-dcn-rw",
+      "esm_tenant_id": 708190274,
+      "esm_offering_id": "26390",
+      "esm_requester_id": "250226",
+      "esm_service_id": "188780",
+      "esm_team_id": "18526",
+      "slack_webhook_url": "",
+      "checks": [
+        {
+          "netbox_site_id": 754,
+          "infra": "test",
+          "vdc_name": "nhn-osl3-vdc03"
+        }
+      ]
+    }

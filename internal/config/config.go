@@ -16,6 +16,11 @@ type Config struct {
 	NetboxAPIToken string  `json:"-"` // Loaded from file, not JSON
 	NAMAPIToken    string  `json:"-"` // Loaded from file, not JSON
 	ESMPassword    string  `json:"-"` // Loaded from file, not JSON
+	ESMTenantID    int     `json:"esm_tenant_id"`
+	ESMOfferingID  string  `json:"esm_offering_id"`
+	ESMRequesterID string  `json:"esm_requester_id"`
+	ESMServiceID   string  `json:"esm_service_id"`
+	ESMTeamID      string  `json:"esm_team_id"`
 	SlackWebhook   string  `json:"slack_webhook_url"`
 	Checks         []Check `json:"checks"`
 }
