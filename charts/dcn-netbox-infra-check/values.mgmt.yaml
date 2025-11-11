@@ -29,6 +29,26 @@ data:
           "netbox_site_id": 754,
           "infra": "mgmt",
           "dc_name": "osl3"
+        },
+        {
+          "netbox_site_id": 753,
+          "infra": "mgmt",
+          "dc_name": "osl1"
+        },
+        {
+          "netbox_site_id": 782,
+          "infra": "mgmt",
+          "dc_name": "bgo1"
+        },
+        {
+          "netbox_site_id": 714,
+          "infra": "mgmt",
+          "dc_name": "trd1"
+        },
+        {
+          "netbox_site_id": 715,
+          "infra": "mgmt",
+          "dc_name": "trd2"
         }
       ]
     }
