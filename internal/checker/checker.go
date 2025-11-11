@@ -9,9 +9,9 @@ import (
 	"github.com/NorskHelsenett/dcn-netbox-infra-check/internal/models"
 )
 
-// Result holds the check results for a VDC
+// Result holds the check results for a DC
 type Result struct {
-	VDCName            string
+	DCName             string
 	Infra              string
 	Output             string
 	HasMismatches      bool
@@ -33,9 +33,9 @@ type WrongPrefix struct {
 	Prefix models.NetboxPrefix
 }
 
-// Check performs all VLAN checks for a given VDC
+// Check performs all VLAN checks for a given DC
 func Check(
-	vdcName string,
+	dcName string,
 	infra string,
 	netboxVLANs []models.NetboxVLAN,
 	netboxPrefixes []models.NetboxPrefix,
@@ -43,21 +43,21 @@ func Check(
 	config *config.Config,
 ) *Result {
 	result := &Result{
-		VDCName: vdcName,
-		Infra:   infra,
+		DCName: dcName,
+		Infra:  infra,
 	}
 
-	// Filter VxLANs for this VDC
-	vdcVxLANs := filterVDCVxLANs(namVxLANs, vdcName)
+	// Filter VxLANs for this DC
+	dcVxLANs := filterDCVxLANs(namVxLANs, dcName)
 
 	// Filter VLANs for this infra
 	infraVLANs := filterInfraVLANs(netboxVLANs, infra)
 
 	// Perform checks
-	result.MovedVLANs = checkMovedVLANs(vdcVxLANs, infraVLANs)
-	result.MisconfiguredVLANs = checkMisconfiguredVLANs(vdcVxLANs, infraVLANs, infra)
-	result.NameMismatches = checkNameMismatches(vdcVxLANs, infraVLANs, result.MisconfiguredVLANs)
-	result.WrongPrefixes = checkWrongPrefixes(vdcVxLANs, netboxPrefixes, infra)
+	result.MovedVLANs = checkMovedVLANs(dcVxLANs, infraVLANs)
+	result.MisconfiguredVLANs = checkMisconfiguredVLANs(dcVxLANs, infraVLANs, infra)
+	result.NameMismatches = checkNameMismatches(dcVxLANs, infraVLANs, result.MisconfiguredVLANs)
+	result.WrongPrefixes = checkWrongPrefixes(dcVxLANs, netboxPrefixes, infra)
 
 	// Set HasMismatches before generating output
 	result.HasMismatches = len(result.MovedVLANs) > 0 ||
@@ -71,11 +71,11 @@ func Check(
 	return result
 }
 
-// filterVDCVxLANs filters VxLANs for a specific VDC
-func filterVDCVxLANs(vxlans []models.NAMVxLAN, vdcName string) []models.NAMVxLAN {
+// filterDCVxLANs filters VxLANs for a specific DC
+func filterDCVxLANs(vxlans []models.NAMVxLAN, dcName string) []models.NAMVxLAN {
 	var filtered []models.NAMVxLAN
 	for _, vxlan := range vxlans {
-		if vxlan.GetContainerName() == vdcName {
+		if vxlan.GetContainerName() == dcName {
 			filtered = append(filtered, vxlan)
 		}
 	}
@@ -94,9 +94,9 @@ func filterInfraVLANs(vlans []models.NetboxVLAN, infra string) []models.NetboxVL
 }
 
 // checkMovedVLANs finds VLANs moved to nam-03 but not updated in NAM
-func checkMovedVLANs(vdcVxLANs []models.NAMVxLAN, infraVLANs []models.NetboxVLAN) []MovedVLAN {
+func checkMovedVLANs(dcVxLANs []models.NAMVxLAN, infraVLANs []models.NetboxVLAN) []MovedVLAN {
 	var moved []MovedVLAN
-	for _, vxlan := range vdcVxLANs {
+	for _, vxlan := range dcVxLANs {
 		for _, vlan := range infraVLANs {
 			if strings.Contains(vlan.Name, "nam-03") &&
 				vlan.VID == vxlan.ID &&
@@ -112,9 +112,9 @@ func checkMovedVLANs(vdcVxLANs []models.NAMVxLAN, infraVLANs []models.NetboxVLAN
 }
 
 // checkMisconfiguredVLANs finds VxLANs missing or misconfigured in Netbox
-func checkMisconfiguredVLANs(vdcVxLANs []models.NAMVxLAN, infraVLANs []models.NetboxVLAN, infra string) []models.NAMVxLAN {
+func checkMisconfiguredVLANs(dcVxLANs []models.NAMVxLAN, infraVLANs []models.NetboxVLAN, infra string) []models.NAMVxLAN {
 	var misconfigured []models.NAMVxLAN
-	for _, vxlan := range vdcVxLANs {
+	for _, vxlan := range dcVxLANs {
 		found := false
 		for _, vlan := range infraVLANs {
 			if vlan.VID == vxlan.ID && vlan.GetInfra() == infra {
@@ -130,7 +130,7 @@ func checkMisconfiguredVLANs(vdcVxLANs []models.NAMVxLAN, infraVLANs []models.Ne
 }
 
 // checkNameMismatches finds VxLANs with name mismatches
-func checkNameMismatches(vdcVxLANs []models.NAMVxLAN, infraVLANs []models.NetboxVLAN, misconfigured []models.NAMVxLAN) []models.NAMVxLAN {
+func checkNameMismatches(dcVxLANs []models.NAMVxLAN, infraVLANs []models.NetboxVLAN, misconfigured []models.NAMVxLAN) []models.NAMVxLAN {
 	var mismatches []models.NAMVxLAN
 
 	// Create a map of misconfigured VLANs for quick lookup
@@ -139,7 +139,7 @@ func checkNameMismatches(vdcVxLANs []models.NAMVxLAN, infraVLANs []models.Netbox
 		misconfiguredMap[v.ID] = true
 	}
 
-	for _, vxlan := range vdcVxLANs {
+	for _, vxlan := range dcVxLANs {
 		// Skip if already in misconfigured list
 		if misconfiguredMap[vxlan.ID] {
 			continue
@@ -160,9 +160,9 @@ func checkNameMismatches(vdcVxLANs []models.NAMVxLAN, infraVLANs []models.Netbox
 }
 
 // checkWrongPrefixes finds prefixes with wrong infra setting
-func checkWrongPrefixes(vdcVxLANs []models.NAMVxLAN, prefixes []models.NetboxPrefix, infra string) []WrongPrefix {
+func checkWrongPrefixes(dcVxLANs []models.NAMVxLAN, prefixes []models.NetboxPrefix, infra string) []WrongPrefix {
 	var wrong []WrongPrefix
-	for _, vxlan := range vdcVxLANs {
+	for _, vxlan := range dcVxLANs {
 		for _, prefix := range prefixes {
 			if prefix.VLAN != nil &&
 				prefix.VLAN.VID == vxlan.ID &&
@@ -190,7 +190,7 @@ func generateOutput(result *Result, config *config.Config) string {
 	if len(result.MovedVLANs) > 0 {
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
-		buf.WriteString(fmt.Sprintf("Vxlans i '%s' som ikke er oppdatert i NAM etter flytting til nam-03 for '%s'\n", result.VDCName, result.Infra))
+		buf.WriteString(fmt.Sprintf("Vxlans i '%s' som ikke er oppdatert i NAM etter flytting til nam-03 for '%s'\n", result.DCName, result.Infra))
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
 		for _, mv := range result.MovedVLANs {
@@ -203,7 +203,7 @@ func generateOutput(result *Result, config *config.Config) string {
 	if len(result.MisconfiguredVLANs) > 0 {
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
-		buf.WriteString(fmt.Sprintf("Vxlans i '%s' som mangler eller ikke er registrert som '%s' i Netbox (%s)\n", result.VDCName, result.Infra, config.NetboxURL))
+		buf.WriteString(fmt.Sprintf("Vxlans i '%s' som mangler eller ikke er registrert som '%s' i Netbox (%s)\n", result.DCName, result.Infra, config.NetboxURL))
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
 		for _, vxlan := range result.MisconfiguredVLANs {
@@ -215,7 +215,7 @@ func generateOutput(result *Result, config *config.Config) string {
 	if len(result.NameMismatches) > 0 {
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
-		buf.WriteString(fmt.Sprintf("Vxlans i '%s' som ikke har samme navn i Netbox (%s)\n", result.VDCName, config.NetboxURL))
+		buf.WriteString(fmt.Sprintf("Vxlans i '%s' som ikke har samme navn i Netbox (%s)\n", result.DCName, config.NetboxURL))
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
 		for _, vxlan := range result.NameMismatches {
@@ -227,7 +227,7 @@ func generateOutput(result *Result, config *config.Config) string {
 	if len(result.WrongPrefixes) > 0 {
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
-		buf.WriteString(fmt.Sprintf("Prefixes i '%s' som har feil 'infra i Netbox (%s)'\n", result.VDCName, config.NetboxURL))
+		buf.WriteString(fmt.Sprintf("Prefixes i '%s' som har feil 'infra i Netbox (%s)'\n", result.DCName, config.NetboxURL))
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
 		for _, wp := range result.WrongPrefixes {

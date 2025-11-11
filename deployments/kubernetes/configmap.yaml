@@ -13,12 +13,12 @@ data:
         {
           "netbox_site_id": 715,
           "infra": "prod",
-          "vdc_name": "nhn-trd2-vdc04"
+          "dc_name": "nhn-trd2-vdc04"
         },
         {
           "netbox_site_id": 782,
           "infra": "prod",
-          "vdc_name": "nhn-bgo1-vdc15"
+          "dc_name": "nhn-bgo1-vdc15"
         }
       ]
     }

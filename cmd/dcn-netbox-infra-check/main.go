@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/NorskHelsenett/dcn-netbox-infra-check/internal/checker"
 	"github.com/NorskHelsenett/dcn-netbox-infra-check/internal/client"
@@ -37,7 +38,7 @@ func main() {
 	for _, check := range cfg.Checks {
 		fmt.Printf("\n\n")
 		fmt.Printf("==================================\n")
-		fmt.Printf("Sjekker VDC: %s\n", check.VDCName)
+		fmt.Printf("Sjekker datasenter %s\n", strings.ToUpper(check.DCName))
 		fmt.Printf("==================================\n\n")
 
 		// Fetch Netbox data for this site
@@ -57,7 +58,7 @@ func main() {
 
 		// Perform checks
 		result := checker.Check(
-			check.VDCName,
+			check.DCName,
 			check.Infra,
 			netboxVLANs,
 			netboxPrefixes,
@@ -82,7 +83,7 @@ func main() {
 			if err != nil {
 				log.Fatalf("✗ Failed to authenticate to ESM: %v", err)
 			}
-			request := esmClient.CreateRequest(result, check.VDCName, check.Infra, cfg)
+			request := esmClient.CreateRequest(result, check.DCName, check.Infra, cfg)
 			err = esmClient.SendRequest(request)
 			if err != nil {
 				log.Fatalf("✗ Failed to send ESM request: %v", err)

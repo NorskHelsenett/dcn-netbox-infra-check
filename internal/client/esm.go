@@ -103,7 +103,7 @@ func (c *ESMClient) Authenticate() error {
 	return nil
 }
 
-func (c *ESMClient) CreateRequest(result *checker.Result, vdcName, infra string, config *config.Config) ESMRequest {
+func (c *ESMClient) CreateRequest(result *checker.Result, dcName, infra string, config *config.Config) ESMRequest {
 
 	// Format preview with HTML line breaks for ESM
 	formattedOutput := strings.ReplaceAll(result.Output, "\n", "<br>")
@@ -114,7 +114,7 @@ func (c *ESMClient) CreateRequest(result *checker.Result, vdcName, infra string,
 		RequestedByPerson:  config.ESMRequesterID,
 		RequestedForPerson: config.ESMRequesterID,
 		UserOptions:        fmt.Sprintf("{\"complexTypeProperties\":[{\"properties\":{\"Tjeneste_c\":\"%s\",\"Team_c\":\"%s\"}}]}", config.ESMServiceID, config.ESMTeamID),
-		DisplayLabel:       fmt.Sprintf("VDC Infra Check - %s - %s", vdcName, infra),
+		DisplayLabel:       fmt.Sprintf("Datasenter Infra Check - %s - %s", dcName, infra),
 		Description:        formattedOutput,
 		PublicScope:        "Private",
 	}

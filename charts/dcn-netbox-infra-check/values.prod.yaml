@@ -28,17 +28,17 @@ data:
         {
           "netbox_site_id": 715,
           "infra": "prod",
-          "vdc_name": "nhn-trd2-vdc04"
+          "dc_name": "nhn-trd2-vdc04"
         },
         {
           "netbox_site_id": 782,
           "infra": "prod",
-          "vdc_name": "nhn-bgo1-vdc15"
+          "dc_name": "nhn-bgo1-vdc15"
         },
         {
           "netbox_site_id": 714,
           "infra": "prod",
-          "vdc_name": "nhn-trd1-vdc01"
+          "dc_name": "nhn-trd1-vdc01"
         }
       ]
     }

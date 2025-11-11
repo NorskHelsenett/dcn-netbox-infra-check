@@ -14,7 +14,7 @@ schedule: "*/5 * * * *"
 data:
   config.json: |
     {
-      "netbox_url": "https://ipam.dcn.nhn.no",
+      "netbox_url": "https://mgmt.ipam.dcn.nhn.no",
       "nam_url": "https://dcn.nhn.no:3000",
       "esm_url": "https://esm.nhn.no",
       "esm_user": "sa-m2t-api-dcn-rw",
@@ -26,19 +26,9 @@ data:
       "slack_webhook_url": "",
       "checks": [
         {
-          "netbox_site_id": 715,
-          "infra": "prod",
-          "vdc_name": "nhn-trd2-vdc04"
-        },
-        {
-          "netbox_site_id": 782,
-          "infra": "prod",
-          "vdc_name": "nhn-bgo1-vdc15"
-        },
-        {
-          "netbox_site_id": 714,
-          "infra": "prod",
-          "vdc_name": "nhn-trd1-vdc01"
+          "netbox_site_id": 754,
+          "infra": "mgmt",
+          "dc_name": "osl3"
         }
       ]
     }

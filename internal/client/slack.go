@@ -86,7 +86,7 @@ func (c *SlackClient) buildPayload(result *checker.Result) map[string]interface{
 			"type": "header",
 			"text": map[string]interface{}{
 				"type": "plain_text",
-				"text": fmt.Sprintf("VLAN OG PREFIX RAPPORT FOR %s", strings.ToUpper(result.VDCName)),
+				"text": fmt.Sprintf("VLAN OG PREFIX RAPPORT FOR %s", strings.ToUpper(result.DCName)),
 			},
 		},
 		{

@@ -24,12 +24,12 @@ The application reads configuration from files mounted in the container:
         {
             "netbox_site_id": 715,
             "infra": "prod",
-            "vdc_name": "nhn-trd2-vdc04"
+            "dc_name": "nhn-trd2-vdc04"
         },
         {
             "netbox_site_id": 782,
             "infra": "prod",
-            "vdc_name": "nhn-bgo1-vdc15"
+            "dc_name": "nhn-bgo1-vdc15"
         }
     ]
 }
@@ -164,11 +164,11 @@ as volumes.
 
 ## Output
 
-The application produces a detailed report for each VDC check:
+The application produces a detailed report for each DC check:
 
 ```
 ========================================
-Processing VDC: nhn-trd2-vdc04 (Site ID: 715, Infra: prod)
+Processing DC: nhn-trd2-vdc04 (Site ID: 715, Infra: prod)
 ========================================
 
 Fetching Netbox VLANs for site 715...
@@ -192,7 +192,7 @@ If mismatches are found a request have been created in ESM
 1. **Failed to load configuration**: Ensure config files are properly mounted in
    `/config` and `/secrets`
 2. **Failed to fetch data**: Check API tokens and network connectivity
-3. **No data returned**: Verify site IDs and VDC names in configuration
+3. **No data returned**: Verify site IDs and DC names in configuration
 
 ### Debug Mode
 

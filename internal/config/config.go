@@ -25,11 +25,11 @@ type Config struct {
 	Checks         []Check `json:"checks"`
 }
 
-// Check represents a VDC check configuration
+// Check represents a DC check configuration
 type Check struct {
 	NetboxSiteID int    `json:"netbox_site_id"`
 	Infra        string `json:"infra"`
-	VDCName      string `json:"vdc_name"`
+	DCName       string `json:"dc_name"`
 }
 
 // LoadConfig loads configuration from files
