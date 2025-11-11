@@ -1,4 +1,4 @@
-infrastructure: "prod"
+infrastructure: "mgmt"
 namespace: "dcn-checks"
 nameOverride: ""
 image:
@@ -14,15 +14,15 @@ schedule: "0 6 * * *"
 data:
   config.json: |
     {
-      "netbox_url": "https://mgmt.ipam.dcn.nhn.no",
-      "nam_url": "https://dcn.nhn.no:3000",
+      "netbox_url": "https://ipam.dcn.nhn.no",
+      "nam_url": "https://mgmt.dcn.nhn.no:3000",
       "esm_url": "https://esm.nhn.no",
-      "esm_user": "sa-m2t-api-dcn-rw",
-      "esm_tenant_id": 938019087,
-      "esm_offering_id": "68905",
-      "esm_requester_id": "200198",
-      "esm_service_id": "73470",
-      "esm_team_id": "67910",
+      "esm_user": "sa-m2p-api-dcn-rw",
+      "esm_tenant_id": 708190274,
+      "esm_offering_id": "26390",
+      "esm_requester_id": "250226",
+      "esm_service_id": "188780",
+      "esm_team_id": "18526",
       "slack_webhook_url": "",
       "checks": [
         {
