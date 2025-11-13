@@ -227,7 +227,7 @@ func generateOutput(result *Result, config *config.Config) string {
 	if len(result.WrongPrefixes) > 0 {
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
-		buf.WriteString(fmt.Sprintf("Prefixes i '%s' som har feil 'infra i Netbox (%s)'\n", result.DCName, config.NetboxURL))
+		buf.WriteString(fmt.Sprintf("Prefixes i '%s' som har feil ''infra' i Netbox (%s)\n", result.DCName, config.NetboxURL))
 		buf.WriteString(strings.Repeat("=", 75))
 		buf.WriteString("\n")
 		for _, wp := range result.WrongPrefixes {
